@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:slide_button/slide_button.dart';
 import 'package:tonia_client/tonia_client/core/sensors.dart';
 import 'package:tonia_client/tonia_client/service/AuthService.dart';
 import 'package:tonia_client/tonia_client/service/SensorService.dart';
@@ -30,13 +31,34 @@ class _HomeScreenState extends State<HomeScreen> {
   }
   Widget _buildSensorCard(BuildContext ctx, int i) {
     Sensor s = sensors[i];
+    Widget controls;
     if(s is LightSensor)
-      return _buildLightSensorCard(s);
+      controls = _buildLightSensorCard(s);
     if(s is AirTemperatureSensor)
-      return _buildAirTemperatureSensorCard(s);
+      controls = _buildAirTemperatureSensorCard(s);
     if(s is GateSensor)
-      return _buildGateSensorCard(s);
-    return Container(child: Text(sensors[i].name, style: TextStyle(color: Colors.black),),);
+      controls = _buildGateSensorCard(s);
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 12, spreadRadius: 0)],
+          borderRadius: BorderRadius.all(Radius.circular(5))
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 36),
+            child: Text(s.name, style: TextStyle(fontSize: 24),),
+          ),
+
+          controls
+
+        ],
+      ),
+    );;
   }
 
   void logoutOnPressed() async{
@@ -45,11 +67,20 @@ class _HomeScreenState extends State<HomeScreen> {
   }
   Widget _buildGateSensorCard(GateSensor s) {
     return Container(
-
-    )
+      child: SlideButton(
+        backgroundColor: Colors.red,
+        slidingBarColor: Colors.lightGreen,
+      ),
+    );
   }
-  Widget _buildLightSensorCard(LightSensor s) {}
-  Widget _buildAirTemperatureSensorCard(AirTemperatureSensor S) {}
+  Widget _buildLightSensorCard(LightSensor s) {
+    return Container(
+
+  );}
+  Widget _buildAirTemperatureSensorCard(AirTemperatureSensor S) {
+    return Container(
+
+  );}
   Widget _buildSensorList(){
     return ListView.builder(
         shrinkWrap: true,
@@ -60,6 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     return Scaffold(
+      backgroundColor: Color(0xFFfbfbfb),
       body: Column(
         children: <Widget>[
           Expanded(
