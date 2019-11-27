@@ -11,6 +11,15 @@ abstract class Sensor {
   Map<String, Function> get actions;
 }
 
+class SensorAction{
+  String name;
+  Sensor sensor;
+  SensorAction(this.sensor, this.name, this.function,{this.matches});
+  int matches;
+
+  Future <void> Function() function;
+}
+
 class GateSensor extends Sensor {
   bool isOpen;
 
@@ -19,10 +28,10 @@ class GateSensor extends Sensor {
   bool isLocked;
 
   Future<void> setOpen(bool isOpen) async{
-    await doc.updateData({"isOpen": isOpen});
+    await doc.updateData({"isOpen": isOpen.toString()});
   }
   Future<void> setLocked(bool isLocked) async{
-    await doc.updateData({"isLocked": isLocked});
+    await doc.updateData({"isLocked": isLocked.toString()});
   }
 
   String _name;
@@ -53,7 +62,8 @@ class LightSensor extends Sensor {
   LightSensor(this._name, {this.isOn, });
 
   Future<void> setOn(bool isOn) async{
-    await doc.updateData({"isOn": isOn});
+    print("ligando/desligando");
+    await doc.updateData({"isOn": isOn.toString()});
   }
 
   @override
@@ -82,7 +92,7 @@ class AirTemperatureSensor extends Sensor {
   }
 
   Future<void> setOn(bool isOn) async{
-    await doc.updateData({"isOn": isOn});
+    await doc.updateData({"isOn": isOn.toString()});
   }
 
   @override
