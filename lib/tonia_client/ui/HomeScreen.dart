@@ -21,7 +21,9 @@ class _HomeScreenState extends State<HomeScreen> {
     showDialog<bool>(
         context: c,
         child: Container(
-            child: SimpleDialog(children: <Widget>[
+            child: SimpleDialog(
+                contentPadding: EdgeInsets.symmetric(vertical: 24, horizontal: 24),
+                children: <Widget>[
           Container(
             child: Text("Adicionar sensor"),
           ),
@@ -33,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Container(
               alignment: Alignment.centerRight,
+              padding: EdgeInsets.only(top: 6),
               child: RaisedButton(
                 child: Text("Adicionar"),
                 onPressed: () {
@@ -87,9 +90,11 @@ class _HomeScreenState extends State<HomeScreen> {
               children: <Widget>[
                 Expanded(
                   child: TypeAheadField<SensorAction>(
+                    hideOnEmpty: true,
+
                     direction: AxisDirection.up,
                     suggestionsCallback: (s){return sensorService.searchActions(s, sensors);},
-                    itemBuilder: (c, s)=> ListTile(title: Text( s.sensor.name), subtitle: Text(s.name),),
+                    itemBuilder: (c, s) => ListTile(title: Text( s.sensor.name), subtitle: Text(s.name),),
                     onSuggestionSelected: (s){actionController.text = s.name; s.function().then((s) => setState((){}));},
                     textFieldConfiguration: TextFieldConfiguration(
                       controller: actionController,
@@ -130,6 +135,9 @@ class _HomeScreenState extends State<HomeScreen> {
     sensorService.listSensors().then((s) => setState(() => sensors = s));
     Firestore.instance.collection("sensors").snapshots().listen((snap) =>
         sensorService.listSensors().then((s) => setState(() => sensors = s)));
+
+    authService.auth.currentUser().then((u) => Firestore.instance.collection("users").document(u.uid).snapshots().listen((snap) =>
+        sensorService.listSensors().then((s) => setState(() => sensors = s))));
   }
 
   void logoutOnPressed() async {
@@ -232,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (s is GateSensor) controls = _buildGateSensorCard(s);
     return Container(
       margin: EdgeInsets.only(
-          left: 12, right: 12, top: i == 0 ? 64 : 12, bottom: 12),
+          left: 12, right: 12, top: i == 0 ? 64 : 12, bottom: i == sensors.length -1 ? 102 : 12),
       decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [

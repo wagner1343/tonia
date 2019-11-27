@@ -31,7 +31,7 @@ class SensorService {
             int matches = sub
                 .allMatches(option)
                 .length;
-            matches += sub.allMatches(s.name).length;
+            matches += sub.allMatches(s.name.toLowerCase()).length;
             result.add(SensorAction(s, option, s.actions[option], matches: matches));
           }
         }
